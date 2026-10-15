@@ -83,7 +83,8 @@ func (c *StatusCollector) CollectAll(ctx context.Context, worktrees []*models.Wo
 				return
 			}
 
-			if strings.HasPrefix(currentPath, worktree.Path) {
+			rel, err := filepath.Rel(worktree.Path, currentPath)
+			if err == nil && rel != ".." && !strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
 				status.IsCurrent = true
 			}
 
